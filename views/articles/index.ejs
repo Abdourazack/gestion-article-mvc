@@ -1,0 +1,143 @@
+<%- include('../layouts/header') %>
+
+<div class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary">
+      <i class="bi bi-box-seam"></i> Liste des Articles
+    </h2>
+    <a href="/articles/add" class="btn btn-outline-primary px-4 py-2 shadow-sm">
+      <i class="bi bi-plus-circle me-1"></i> Ajouter un article
+    </a>
+  </div>
+
+  <!-- 🔍 Barre de recherche -->
+  <form class="mb-4" method="GET" action="/articles">
+    <div class="input-group shadow-sm">
+      <span class="input-group-text bg-white border-end-0">
+        <i class="bi bi-search text-muted"></i>
+      </span>
+      <input
+        type="text"
+        name="q"
+        class="form-control border-start-0"
+        placeholder="Rechercher un article par nom..."
+        value="<%= searchQuery || '' %>"
+      />
+      <button class="btn btn-outline-secondary" type="submit">
+        Rechercher
+      </button>
+    </div>
+  </form>
+
+  <% if (Object.keys(grouped).length === 0) { %>
+  <div class="alert alert-info text-center shadow-sm">
+    Aucun article trouvé.
+  </div>
+  <% } else { %> <% Object.entries(grouped).forEach(([categorie, articles]) => {
+  %>
+  <h4 class="mt-5 mb-3 text-secondary border-bottom pb-1">
+    <i class="bi bi-tags-fill text-primary me-1"></i> <%= categorie %>
+  </h4>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <% articles.forEach(article => { %>
+    <div class="col">
+      <div class="card h-100 border-0 shadow rounded-4">
+        <% if (article.photo) { %>
+        <img
+          src="/<%= article.photo %>"
+          class="card-img-top rounded-top-4"
+          alt="photo de l'article"
+          style="height: 220px; object-fit: cover"
+        />
+        <% } else { %>
+        <div
+          class="bg-light d-flex justify-content-center align-items-center rounded-top-4"
+          style="height: 220px"
+        >
+          <span class="text-muted">
+            <i class="bi bi-image" style="font-size: 2rem"></i><br />Pas d'image
+          </span>
+        </div>
+        <% } %>
+
+        <div class="card-body">
+          <h5 class="card-title fw-semibold text-dark"><%= article.titre %></h5>
+          <p class="card-text small text-muted"><%= article.description %></p>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <span class="badge bg-primary px-3 py-2">
+              <i class="bi bi-tag"></i> <%= article.type_nom %>
+            </span>
+            <strong class="text-success fs-6">
+              <i class="bi bi-currency-euro"></i> <%= article.prix %>
+            </strong>
+          </div>
+        </div>
+
+        <div
+          class="card-footer bg-white border-0 d-flex justify-content-between px-3 pb-3"
+        >
+          <a
+            href="/articles/edit/<%= article.id %>"
+            class="btn btn-sm btn-outline-warning"
+          >
+            <i class="bi bi-pencil-square"></i> Modifier
+          </a>
+          <button
+            class="btn btn-sm btn-outline-danger"
+            onclick="confirmDelete(<%= article.id %>)"
+          >
+            <i class="bi bi-trash"></i> Supprimer
+          </button>
+        </div>
+      </div>
+    </div>
+    <% }) %>
+  </div>
+  <% }) %> <% } %>
+</div>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  // Confirmation de suppression
+  function confirmDelete(articleId) {
+    Swal.fire({
+      title: "Confirmer la suppression",
+      text: "Cet article sera définitivement supprimé.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Oui, supprimer",
+      cancelButtonText: "Annuler",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        window.location.href = `/articles/delete/${articleId}`;
+      }
+    });
+  }
+
+  // Message de succès (ajout ou modification)
+  const urlParams = new URLSearchParams(window.location.search);
+  const successMessage = urlParams.get("success");
+
+  if (successMessage) {
+    Swal.fire({
+      icon: "success",
+      title: "Succès",
+      text: successMessage,
+      timer: 2000,
+      showConfirmButton: false,
+    });
+
+    // Nettoyer l'URL
+    if (history.replaceState) {
+      const cleanUrl = window.location.href.split("?")[0];
+      history.replaceState(null, "", cleanUrl);
+    }
+  }
+</script>
+
+<%- include('../layouts/footer') %>

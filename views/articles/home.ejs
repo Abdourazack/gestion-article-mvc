@@ -1,0 +1,32 @@
+<%- include('layouts/header') %>
+
+<style>
+  .hero-section {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(185, 64, 64, 0.9)),
+      url("/public/images/stock.jpg") no-repeat center center;
+    background-size: cover;
+    height: 100vh;
+  }
+</style>
+
+<main
+  class="hero-section d-flex align-items-center justify-content-center text-white text-center"
+>
+  <div class="container">
+    <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">
+      Bienvenue sur la plateforme
+    </h1>
+    <p class="lead mb-5 animate__animated animate__fadeInUp animate__delay-1s">
+      Gérez vos articles simplement, par type, image et description.
+    </p>
+    <a
+      href="/articles"
+      class="btn btn-warning btn-lg px-5 py-3 rounded-pill shadow animate__animated animate__zoomIn animate__delay-2s"
+    >
+      <i class="bi bi-box-arrow-in-right me-2"></i> Accéder à la gestion des
+      articles
+    </a>
+  </div>
+</main>
+
+<%- include('layouts/footer') %>
