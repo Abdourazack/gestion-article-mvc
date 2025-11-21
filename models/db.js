@@ -4,7 +4,7 @@ require("dotenv").config(); // ← assure-toi que dotenv est chargé
 const connection = mysql.createConnection({
   host: "mysql-gestionarticle.alwaysdata.net",
     user: "442010",            // ← ton vrai user MySQL Alwaysdata
-    password: "TON_MDP_MYSQL", // ← le vrai mot de passe de la base
+    password: "Arise]1", // ← le vrai mot de passe de la base
     database: "gestionarticle_mvc"
 });
 
