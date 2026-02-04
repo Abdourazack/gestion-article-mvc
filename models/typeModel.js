@@ -1,14 +1,9 @@
 const db = require("./db");
 
 class Type {
-  static getAll() {
-    return new Promise((resolve, reject) => {
-      const sql = "SELECT * FROM types";
-      db.query(sql, (err, results) => {
-        if (err) return reject(err);
-        resolve(results);
-      });
-    });
+  static async getAll() {
+    const result = await db.query("SELECT type_id, nom FROM types ORDER BY type_id ASC");
+    return result.rows;
   }
 }
 

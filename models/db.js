@@ -1,19 +1,23 @@
-const mysql = require("mysql2");
-require("dotenv").config(); // ← assure-toi que dotenv est chargé
+const { Pool } = require("pg");
+require("dotenv").config();
 
-const connection = mysql.createConnection({
-  host: "mysql-gestionarticle.alwaysdata.net",
-    user: "442010",            // ← ton vrai user MySQL Alwaysdata
-    password: "Arise]1", // ← le vrai mot de passe de la base
-    database: "gestionarticle_mvc"
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: Number(process.env.DB_PORT || 5432),
+  ssl: { rejectUnauthorized: false }, // Neon -> SSL obligatoire
 });
 
-connection.connect((err) => {
-  if (err) {
-    console.error("❌ Erreur connexion MySQL:", err);
-    return;
-  }
-  console.log("✅ Connecté à la base MySQL");
-});
+pool
+  .connect()
+  .then((client) => {
+    console.log("✅ Connecté à PostgreSQL (Neon)");
+    client.release();
+  })
+  .catch((err) => {
+    console.error("❌ Erreur connexion PostgreSQL:", err.message);
+  });
 
-module.exports = connection;
+module.exports = pool;
